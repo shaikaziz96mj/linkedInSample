@@ -137,7 +137,6 @@ public class SnapChatService implements ISnapChatService {
 			return new ResponseObject(id, null, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseObject(null, e.getMessage(),HttpStatus.BAD_REQUEST);
-			//return e.getMessage();
 		}
 	}
 	

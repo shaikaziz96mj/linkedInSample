@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.social.domain.ResponseObject;
+import com.social.service.IHubSpotService;
 import com.social.service.ILinkedInService;
 import com.social.service.ISnapChatService;
 
@@ -23,17 +24,27 @@ public class LinkedInSocialController {
 	
 	@Autowired
 	private ISnapChatService snapchatService;
+	
+	@Autowired
+	private IHubSpotService hubspotService;
 
 	@GetMapping
 	public List<String> welcome() {
 		List<String> urls=new ArrayList<String>();
 		urls.add("http://localhost:8081/api/v1/generateLinkedInAuthorizeURL");
 		urls.add("http://localhost:8081/api/v1/linkedInAccessToken");
+		urls.add("=====================================================================");
 		urls.add("http://localhost:8081/api/v1/authenticationUrl");
 		urls.add("http://localhost:8081/api/v1/userAccessToken");
 		urls.add("http://localhost:8081/api/v1/userNewAccessToken");
 		urls.add("http://localhost:8081/api/v1/organizationId");
 		urls.add("http://localhost:8081/api/v1/userAdAccounts");
+		urls.add("=====================================================================");
+		urls.add("http://localhost:8081/api/v1/hubspotAuthorizeUrl");
+		urls.add("http://localhost:8081/api/v1/hubspotUserToken");
+		urls.add("http://localhost:8081/api/v1/hubspotRefreshAccessToken");
+		urls.add("http://localhost:8081/api/v1/hubspotAccessTokenInfo");
+		urls.add("http://localhost:8081/api/v1/hubspotRefreshTokenInfo");
 		return urls;
 	}
 	
@@ -70,6 +81,31 @@ public class LinkedInSocialController {
 	@GetMapping("/userAdAccounts")
 	public ResponseObject userAdAccounts(@RequestParam("token") String accessToken) {
 		return snapchatService.userAdAccounts(accessToken);
+	}
+	
+	@GetMapping("/hubspotAuthorizeUrl")
+	public String hubspotAuthorizeUrl(){
+		return hubspotService.authorizeUrl();
+	}
+	
+	@PostMapping("/hubspotUserToken")
+	public ResponseObject hubspotUserAccessToken(@RequestParam("authCode") String authCode) {
+		return hubspotService.userAccessToken(authCode);
+	}
+	
+	@PostMapping("/hubspotRefreshAccessToken")
+	public ResponseObject hubspotUserRefreshAccessToken(@RequestParam("refreshToken") String refreshToken) {
+		return hubspotService.refreshUserAccessToken(refreshToken);
+	}
+	
+	@GetMapping("/hubspotAccessTokenInfo")
+	public ResponseObject hubspotAccessTokenInfo(@RequestParam("token") String accessToken) {
+		return hubspotService.userAccessTokenInfo(accessToken);
+	}
+	
+	@GetMapping("/hubspotRefreshTokenInfo")
+	public ResponseObject hubspotRefreshTokenInfo(@RequestParam("token") String refreshToken) {
+		return hubspotService.userRefreshTokenInfo(refreshToken);
 	}
 	
 }
